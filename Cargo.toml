@@ -1,0 +1,10 @@
+[package]
+name = "ramune"
+version = "0.0.0"
+authors = ["solarane <junmo.moon8@gmail.com>"]
+edition = "2018"
+description = "Another opinionated 2d game framework for Rust"
+license = "Zlib"
+repository = "https://github.com/solarane/ramune"
+
+[dependencies]
