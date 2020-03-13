@@ -8,3 +8,4 @@ license = "Zlib"
 repository = "https://github.com/solarane/ramune"
 
 [dependencies]
+glutin = "0.24.0"
