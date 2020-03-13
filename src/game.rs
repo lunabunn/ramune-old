@@ -1,11 +1,12 @@
 use crate::graphics;
+use crate::Context;
 
 /// Runs the game with the given `options`, firing `callback` upon game loop events.
 ///
 /// # Examples
 /// ```rust
 /// use ramune::{GameOptions, Event};
-/// use ramune::graphics::Color;
+/// use ramune::graphics::{Graphics, Color};
 /// 
 /// fn main() {
 ///     let options = GameOptions {
@@ -14,11 +15,10 @@ use crate::graphics;
 ///     };
 /// 
 ///     ramune::run(options, |e| match e {
-///         Event::Render(ctx, frames) => {
+///         Event::Draw(ctx) => {
 ///             let g = &mut ctx.graphics;
-///             g.begin(frames[0], Some(Color::rgb(0.5, 0.3, 0.7)));
-///             g.fill_rect(50, 50, 100, 100);
-///             g.end();
+///             g.fill_rect(50.0, 50.0, 100.0, 100.0);
+///             g.flush(Some(Color::rgb(0.5, 0.7, 0.3)));
 ///         },
 ///         _ => { }
 ///     });
@@ -46,14 +46,13 @@ impl Default for GameOptions {
 }
 
 /// An event in the game loop.
-#[derive(Debug)]
-pub enum Event {
+pub enum Event<'a> {
     /// Event fired once on initialization.
-    Init(),
+    Init(&'a mut Context),
     /// Event fired every frame for game logic.
-    Update(),
+    Update(&'a mut Context),
     /// Event fired every frame for rendering.
-    Draw(),
+    Draw(&'a mut Context),
     /// Event fired on window resize.
-    WindowResized(),
+    WindowResized(&'a mut Context),
 }
