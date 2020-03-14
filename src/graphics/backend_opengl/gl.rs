@@ -426,9 +426,9 @@ impl HasNumberEnum for f64 {
 }
 
 /// Wrapper struct around an OpenGL context.
-/// 
+///
 /// This struct is currently a huge lie, because glad2 Rust does not yet support multicontext. (see: https://github.com/Dav1dde/glad/issues/254)
-/// 
+///
 /// TODO - This should be a newtype over `GladGLContext`.
 pub struct Gl;
 

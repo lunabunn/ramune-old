@@ -105,7 +105,8 @@ impl GLGraphics {
     pub fn set_viewport(&mut self, x: i32, y: i32, width: i32, height: i32) {
         self.gl.use_program(Some(self.default_program));
         self.gl.viewport(x, y, width, height);
-        self.gl.uniform_2(self.uniform_viewport, width as f32, height as f32);
+        self.gl
+            .uniform_2(self.uniform_viewport, width as f32, height as f32);
         self.gl.use_program(None);
     }
 }
@@ -187,7 +188,8 @@ impl Graphics for GLGraphics {
         self.gl.use_program(Some(self.default_program));
 
         self.gl.bind_buffer(gl::BufferKind::Array, Some(vbo_write));
-        self.gl.buffer_data(gl::BufferKind::Array, &verts, gl::UsageMode::Stream);
+        self.gl
+            .buffer_data(gl::BufferKind::Array, &verts, gl::UsageMode::Stream);
         self.gl.vertex_attrib_pointer::<f32>(0, 2, false, 6, 0);
         self.gl.vertex_attrib_pointer::<f32>(1, 4, false, 6, 2);
 
@@ -200,7 +202,8 @@ impl Graphics for GLGraphics {
             self.gl.bind_buffer(gl::BufferKind::Array, Some(vbo_render));
             let mut index = 0;
             for batch in batches_prev {
-                self.gl.draw_arrays(gl::DrawMode::Triangles, index, index + batch.vert_count);
+                self.gl
+                    .draw_arrays(gl::DrawMode::Triangles, index, index + batch.vert_count);
                 index += batch.vert_count;
             }
         }

@@ -7,19 +7,19 @@ use crate::Context;
 /// ```rust
 /// use ramune::{GameOptions, Event};
 /// use ramune::graphics::{Graphics, Color};
-/// 
+///
 /// fn main() {
 ///     let options = GameOptions {
 ///         title: "My Awesome Game",
 ///         ..Default::default()
 ///     };
-/// 
+///
 ///     ramune::run(options, |e| match e {
 ///         Event::Draw(ctx) => {
 ///             let g = &mut ctx.graphics;
 ///             g.fill_rect(50.0, 50.0, 100.0, 100.0);
 ///             g.flush(Some(Color::rgb(0.5, 0.7, 0.3)));
-///         },
+///         }
 ///         _ => { }
 ///     });
 /// }

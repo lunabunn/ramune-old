@@ -1,13 +1,13 @@
+use super::gl::Gl;
+use super::graphics::GLGraphics;
+use crate::graphics::GraphicsBackends;
+use crate::Event as GameEvent;
+use crate::{Context, GameOptions};
 use glutin::dpi::LogicalSize;
 use glutin::event::{Event, WindowEvent};
 use glutin::event_loop::{ControlFlow, EventLoop};
 use glutin::window::WindowBuilder;
 use glutin::ContextBuilder;
-use crate::{GameOptions, Context};
-use crate::Event as GameEvent;
-use crate::graphics::GraphicsBackends;
-use super::graphics::GLGraphics;
-use super::gl::Gl;
 
 pub fn run(options: GameOptions, mut callback: impl FnMut(GameEvent) + 'static) {
     let aspect_ratio = options.size.0 as f32 / options.size.1 as f32;
@@ -50,7 +50,7 @@ pub fn run(options: GameOptions, mut callback: impl FnMut(GameEvent) + 'static) 
                         new_width = aspect_ratio * height as f32;
                         new_x = (width as f32 - new_width) / 2.0;
                     }
-                    
+
                     if let GraphicsBackends::GL(g) = &mut context.graphics {
                         g.gl.viewport(
                             new_x.round() as i32,
