@@ -1,11 +1,8 @@
 use super::gl;
-use super::gl::Gl;
 use crate::graphics::{Color, Graphics};
 use crate::GameOptions;
 
 pub struct GLGraphics {
-    pub gl: Gl,
-
     vbo_a: gl::VBO,
     vbo_b: gl::VBO,
     default_program: gl::Program,
@@ -31,7 +28,7 @@ struct Batch {
 }
 
 impl GLGraphics {
-    pub fn new(options: &GameOptions, gl: Gl) -> Self {
+    pub fn new(options: &GameOptions) -> Self {
         let vbo_a: gl::VBO;
         let vbo_b: gl::VBO;
         let default_program: gl::Program;
@@ -68,25 +65,23 @@ impl GLGraphics {
         default_program = gl::Program::from_source(vertex_shader_source, fragment_shader_source)
             .unwrap_or_else(|s| panic!("{}", s));
 
-        gl.enable_vertex_attrib_array(0);
-        gl.enable_vertex_attrib_array(1);
+        gl::enable_vertex_attrib_array(0);
+        gl::enable_vertex_attrib_array(1);
 
-        gl.use_program(Some(default_program));
+        gl::use_program(Some(default_program));
         uniform_viewport = default_program.get_uniform_location("uViewport");
-        gl.viewport(0, 0, options.size.0 as i32, options.size.1 as i32);
-        gl.uniform_2(
+        gl::viewport(0, 0, options.size.0 as i32, options.size.1 as i32);
+        gl::uniform_2(
             uniform_viewport,
             options.size.0 as f32,
             options.size.1 as f32,
         );
-        gl.use_program(None);
+        gl::use_program(None);
 
         let curr_color = Color::rgb(1.0, 1.0, 1.0);
         let curr_depth = 0.0;
         let commands = Vec::default();
         GLGraphics {
-            gl,
-
             vbo_a,
             vbo_b,
             default_program,
@@ -103,11 +98,10 @@ impl GLGraphics {
     }
 
     pub fn set_viewport(&mut self, x: i32, y: i32, width: i32, height: i32) {
-        self.gl.use_program(Some(self.default_program));
-        self.gl.viewport(x, y, width, height);
-        self.gl
-            .uniform_2(self.uniform_viewport, width as f32, height as f32);
-        self.gl.use_program(None);
+        gl::use_program(Some(self.default_program));
+        gl::viewport(x, y, width, height);
+        gl::uniform_2(self.uniform_viewport, width as f32, height as f32);
+        gl::use_program(None);
     }
 }
 
@@ -185,32 +179,30 @@ impl Graphics for GLGraphics {
         };
         self.vbo_switch = !self.vbo_switch;
 
-        self.gl.use_program(Some(self.default_program));
+        gl::use_program(Some(self.default_program));
 
-        self.gl.bind_buffer(gl::BufferKind::Array, Some(vbo_write));
-        self.gl
-            .buffer_data(gl::BufferKind::Array, &verts, gl::UsageMode::Stream);
-        self.gl.vertex_attrib_pointer::<f32>(0, 2, false, 6, 0);
-        self.gl.vertex_attrib_pointer::<f32>(1, 4, false, 6, 2);
+        gl::bind_buffer(gl::BufferKind::Array, Some(vbo_write));
+        gl::buffer_data(gl::BufferKind::Array, &verts, gl::UsageMode::Stream);
+        gl::vertex_attrib_pointer::<f32>(0, 2, false, 6, 0);
+        gl::vertex_attrib_pointer::<f32>(1, 4, false, 6, 2);
 
         if let Some(color) = clear_color {
-            self.gl.clear_color(color.r, color.g, color.b, color.a);
-            self.gl.clear(gl::BufferBit::Color);
+            gl::clear_color(color.r, color.g, color.b, color.a);
+            gl::clear(gl::BufferBit::Color);
         }
 
         if let Some(batches_prev) = &self.batches_prev {
-            self.gl.bind_buffer(gl::BufferKind::Array, Some(vbo_render));
+            gl::bind_buffer(gl::BufferKind::Array, Some(vbo_render));
             let mut index = 0;
             for batch in batches_prev {
-                self.gl
-                    .draw_arrays(gl::DrawMode::Triangles, index, index + batch.vert_count);
+                gl::draw_arrays(gl::DrawMode::Triangles, index, index + batch.vert_count);
                 index += batch.vert_count;
             }
         }
 
         self.batches_prev = Some(batches);
 
-        self.gl.bind_buffer(gl::BufferKind::Array, None);
-        self.gl.use_program(None);
+        gl::bind_buffer(gl::BufferKind::Array, None);
+        gl::use_program(None);
     }
 }

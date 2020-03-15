@@ -425,182 +425,161 @@ impl HasNumberEnum for f64 {
     }
 }
 
-/// Wrapper struct around an OpenGL context.
-///
-/// This struct is currently a huge lie, because glad2 Rust does not yet support multicontext. (see: https://github.com/Dav1dde/glad/issues/254)
-///
-/// TODO - This should be a newtype over `GladGLContext`.
-pub struct Gl;
+pub fn load(loadfn: impl FnMut(&'static str) -> *const std::ffi::c_void) {
+    gl::load(loadfn);
 
-impl Gl {
-    pub fn load(loadfn: impl FnMut(&'static str) -> *const std::ffi::c_void) -> Self {
-        gl::load(loadfn);
-
-        unsafe {
-            let mut vao = 0;
-            gl::GenVertexArrays(1, &mut vao);
-            gl::BindVertexArray(vao);
-        }
-
-        Self
+    unsafe {
+        let mut vao = 0;
+        gl::GenVertexArrays(1, &mut vao);
+        gl::BindVertexArray(vao);
     }
+}
 
-    pub fn bind_buffer(&self, target: BufferKind, buffer: Option<VBO>) {
-        unsafe {
-            gl::BindBuffer(
-                target as u32,
-                if let Some(buffer) = buffer {
-                    buffer.into()
-                } else {
-                    0
-                },
-            );
-        }
-    }
-
-    pub fn enable_vertex_attrib_array(&self, index: u32) {
-        unsafe {
-            gl::EnableVertexAttribArray(index);
-        }
-    }
-
-    pub fn buffer_data<T: Sized>(&self, target: BufferKind, data: &[T], usage: UsageMode) {
-        unsafe {
-            gl::BufferData(
-                target as u32,
-                (std::mem::size_of::<f32>() * data.len()) as isize,
-                data as *const _ as *const std::ffi::c_void,
-                usage as u32,
-            );
-        }
-    }
-
-    pub fn vertex_attrib_pointer<T: HasNumberEnum>(
-        &self,
-        index: u32,
-        size: u32,
-        normalized: bool,
-        stride: u32,
-        offset: u32,
-    ) {
-        unsafe {
-            gl::VertexAttribPointer(
-                index,
-                size as i32,
-                T::get() as u32,
-                normalized as u8,
-                stride as i32 * std::mem::size_of::<T>() as i32,
-                (offset as usize * std::mem::size_of::<T>()) as *const std::ffi::c_void,
-            );
-        }
-    }
-
-    pub fn use_program(&self, program: Option<Program>) {
-        unsafe {
-            gl::UseProgram(if let Some(program) = program {
-                program.into()
+pub fn bind_buffer(target: BufferKind, buffer: Option<VBO>) {
+    unsafe {
+        gl::BindBuffer(
+            target as u32,
+            if let Some(buffer) = buffer {
+                buffer.into()
             } else {
                 0
-            });
-        }
+            },
+        );
     }
+}
 
-    pub fn uniform_1<T: SetUniform>(&self, uniform: Option<UniformLocation>, x: T) {
-        T::uniform_1(uniform, x);
+pub fn enable_vertex_attrib_array(index: u32) {
+    unsafe {
+        gl::EnableVertexAttribArray(index);
     }
+}
 
-    pub fn uniform_2<T: SetUniform>(&self, uniform: Option<UniformLocation>, x: T, y: T) {
-        T::uniform_2(uniform, x, y);
+pub fn buffer_data<T: Sized>(target: BufferKind, data: &[T], usage: UsageMode) {
+    unsafe {
+        gl::BufferData(
+            target as u32,
+            (std::mem::size_of::<f32>() * data.len()) as isize,
+            data as *const _ as *const std::ffi::c_void,
+            usage as u32,
+        );
     }
+}
 
-    pub fn uniform_3<T: SetUniform>(&self, uniform: Option<UniformLocation>, x: T, y: T, z: T) {
-        T::uniform_3(uniform, x, y, z);
+pub fn vertex_attrib_pointer<T: HasNumberEnum>(
+    index: u32,
+    size: u32,
+    normalized: bool,
+    stride: u32,
+    offset: u32,
+) {
+    unsafe {
+        gl::VertexAttribPointer(
+            index,
+            size as i32,
+            T::get() as u32,
+            normalized as u8,
+            stride as i32 * std::mem::size_of::<T>() as i32,
+            (offset as usize * std::mem::size_of::<T>()) as *const std::ffi::c_void,
+        );
     }
+}
 
-    pub fn uniform_4<T: SetUniform>(
-        &self,
-        uniform: Option<UniformLocation>,
-        x: T,
-        y: T,
-        z: T,
-        w: T,
-    ) {
-        T::uniform_4(uniform, x, y, z, w);
+pub fn use_program(program: Option<Program>) {
+    unsafe {
+        gl::UseProgram(if let Some(program) = program {
+            program.into()
+        } else {
+            0
+        });
     }
+}
 
-    pub fn viewport(&self, x: i32, y: i32, width: i32, height: i32) {
-        unsafe {
-            gl::Viewport(x, y, width, height);
-        }
+pub fn uniform_1<T: SetUniform>(uniform: Option<UniformLocation>, x: T) {
+    T::uniform_1(uniform, x);
+}
+
+pub fn uniform_2<T: SetUniform>(uniform: Option<UniformLocation>, x: T, y: T) {
+    T::uniform_2(uniform, x, y);
+}
+
+pub fn uniform_3<T: SetUniform>(uniform: Option<UniformLocation>, x: T, y: T, z: T) {
+    T::uniform_3(uniform, x, y, z);
+}
+
+pub fn uniform_4<T: SetUniform>(uniform: Option<UniformLocation>, x: T, y: T, z: T, w: T) {
+    T::uniform_4(uniform, x, y, z, w);
+}
+
+pub fn viewport(x: i32, y: i32, width: i32, height: i32) {
+    unsafe {
+        gl::Viewport(x, y, width, height);
     }
+}
 
-    pub fn clear_color(&self, red: f32, green: f32, blue: f32, alpha: f32) {
-        unsafe {
-            gl::ClearColor(red, green, blue, alpha);
-        }
+pub fn clear_color(red: f32, green: f32, blue: f32, alpha: f32) {
+    unsafe {
+        gl::ClearColor(red, green, blue, alpha);
     }
+}
 
-    pub fn clear(&self, mask: BufferBit) {
-        unsafe {
-            gl::Clear(mask.into());
-        }
+pub fn clear(mask: BufferBit) {
+    unsafe {
+        gl::Clear(mask.into());
     }
+}
 
-    pub fn draw_arrays(&self, mode: DrawMode, first: i32, count: i32) {
-        unsafe {
-            gl::DrawArrays(mode as u32, first, count);
-        }
+pub fn draw_arrays(mode: DrawMode, first: i32, count: i32) {
+    unsafe {
+        gl::DrawArrays(mode as u32, first, count);
     }
+}
 
-    pub fn bind_texture(&self, kind: TextureKind, texture: Option<Texture>) {
-        unsafe {
-            gl::BindTexture(
-                kind as u32,
-                if let Some(texture) = texture {
-                    texture.into()
-                } else {
-                    0
-                },
-            );
-        }
+pub fn bind_texture(kind: TextureKind, texture: Option<Texture>) {
+    unsafe {
+        gl::BindTexture(
+            kind as u32,
+            if let Some(texture) = texture {
+                texture.into()
+            } else {
+                0
+            },
+        );
     }
+}
 
-    pub fn tex_parameter<T: SetTextureParameter>(
-        &self,
-        target: TextureKind,
-        pname: TextureParameter,
-        param: T,
-    ) {
-        T::tex_parameter(target, pname, param);
+pub fn tex_parameter<T: SetTextureParameter>(
+    target: TextureKind,
+    pname: TextureParameter,
+    param: T,
+) {
+    T::tex_parameter(target, pname, param);
+}
+
+pub fn tex_image_2d(
+    target: TextureKind,
+    level: u32,
+    format: TextureFormat,
+    width: u32,
+    height: u32,
+    data: &[u8],
+) {
+    unsafe {
+        gl::TexImage2D(
+            target as u32,
+            level as i32,
+            format as i32,
+            width as i32,
+            height as i32,
+            0,
+            format as u32,
+            gl::GL_UNSIGNED_BYTE,
+            data as *const _ as *const std::ffi::c_void,
+        );
     }
+}
 
-    pub fn tex_image_2d(
-        &self,
-        target: TextureKind,
-        level: u32,
-        format: TextureFormat,
-        width: u32,
-        height: u32,
-        data: &[u8],
-    ) {
-        unsafe {
-            gl::TexImage2D(
-                target as u32,
-                level as i32,
-                format as i32,
-                width as i32,
-                height as i32,
-                0,
-                format as u32,
-                gl::GL_UNSIGNED_BYTE,
-                data as *const _ as *const std::ffi::c_void,
-            );
-        }
-    }
-
-    pub fn generate_mipmap(&self, target: TextureKind) {
-        unsafe {
-            gl::GenerateMipmap(target as u32);
-        }
+pub fn generate_mipmap(target: TextureKind) {
+    unsafe {
+        gl::GenerateMipmap(target as u32);
     }
 }

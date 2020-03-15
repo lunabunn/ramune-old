@@ -1,4 +1,4 @@
-use super::gl::Gl;
+use super::gl;
 use super::graphics::GLGraphics;
 use crate::graphics::GraphicsBackends;
 use crate::Event as GameEvent;
@@ -22,9 +22,9 @@ pub fn run(options: GameOptions, mut callback: impl FnMut(GameEvent) + 'static) 
         .unwrap();
     let windowed_context = unsafe { windowed_context.make_current().unwrap() };
 
-    let gl = Gl::load(|s| windowed_context.get_proc_address(s) as *const std::ffi::c_void);
+    gl::load(|s| windowed_context.get_proc_address(s) as *const std::ffi::c_void);
     let mut context = Context {
-        graphics: GraphicsBackends::GL(GLGraphics::new(&options, gl)),
+        graphics: GraphicsBackends::GL(GLGraphics::new(&options)),
     };
 
     callback(GameEvent::Init(&mut context));
@@ -51,16 +51,12 @@ pub fn run(options: GameOptions, mut callback: impl FnMut(GameEvent) + 'static) 
                         new_x = (width as f32 - new_width) / 2.0;
                     }
 
-                    if let GraphicsBackends::GL(g) = &mut context.graphics {
-                        g.gl.viewport(
-                            new_x.round() as i32,
-                            new_y.round() as i32,
-                            new_width.round() as i32,
-                            new_height.round() as i32,
-                        );
-                    } else {
-                        unreachable!("Graphics backend invariant broken!");
-                    }
+                    gl::viewport(
+                        new_x.round() as i32,
+                        new_y.round() as i32,
+                        new_width.round() as i32,
+                        new_height.round() as i32,
+                    );
                     callback(GameEvent::WindowResized(&mut context));
                 }
                 WindowEvent::CloseRequested => {
