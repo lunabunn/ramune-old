@@ -67,8 +67,10 @@ impl GLGraphics {
 
             uniform sampler2D uTexture;
 
+            out vec4 FragColor;
+
             void main() {
-                gl_FragColor = texture(uTexture, vTexCoord) * vColor;
+                FragColor = texture(uTexture, vTexCoord) * vColor;
             }
         "#;
 
