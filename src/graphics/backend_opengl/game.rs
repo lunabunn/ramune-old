@@ -7,7 +7,7 @@ use glutin::dpi::LogicalSize;
 use glutin::event::{Event, WindowEvent};
 use glutin::event_loop::{ControlFlow, EventLoop};
 use glutin::window::WindowBuilder;
-use glutin::ContextBuilder;
+use glutin::{Api, ContextBuilder, GlProfile, GlRequest};
 
 pub fn run(options: GameOptions, mut callback: impl FnMut(GameEvent) + 'static) {
     let aspect_ratio = options.size.0 as f32 / options.size.1 as f32;
@@ -18,6 +18,8 @@ pub fn run(options: GameOptions, mut callback: impl FnMut(GameEvent) + 'static) 
         .with_inner_size(LogicalSize::new(options.size.0, options.size.1));
     let windowed_context = ContextBuilder::new()
         .with_vsync(true)
+        .with_gl(GlRequest::Specific(Api::OpenGl, (3, 3)))
+        .with_gl_profile(GlProfile::Core)
         .build_windowed(wb, &el)
         .unwrap();
     let windowed_context = unsafe { windowed_context.make_current().unwrap() };

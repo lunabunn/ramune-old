@@ -1,4 +1,4 @@
-//! A module containing OpenGL 3.2 Core Profile bindings.
+//! A module containing OpenGL 3.3 Core Profile bindings.
 //! These bindings were automatically generated using Glad 2 (Dav1dde/glad).
 
 #![allow(dead_code)]
@@ -168,6 +168,7 @@ pub mod enumerations {
     pub const GL_AND: std::os::raw::c_uint = 0x1501;
     pub const GL_AND_INVERTED: std::os::raw::c_uint = 0x1504;
     pub const GL_AND_REVERSE: std::os::raw::c_uint = 0x1502;
+    pub const GL_ANY_SAMPLES_PASSED: std::os::raw::c_uint = 0x8C2F;
     pub const GL_ARRAY_BUFFER: std::os::raw::c_uint = 0x8892;
     pub const GL_ARRAY_BUFFER_BINDING: std::os::raw::c_uint = 0x8894;
     pub const GL_ATTACHED_SHADERS: std::os::raw::c_uint = 0x8B85;
@@ -409,6 +410,7 @@ pub mod enumerations {
     pub const GL_INFO_LOG_LENGTH: std::os::raw::c_uint = 0x8B84;
     pub const GL_INT: std::os::raw::c_uint = 0x1404;
     pub const GL_INTERLEAVED_ATTRIBS: std::os::raw::c_uint = 0x8C8C;
+    pub const GL_INT_2_10_10_10_REV: std::os::raw::c_uint = 0x8D9F;
     pub const GL_INT_SAMPLER_1D: std::os::raw::c_uint = 0x8DC9;
     pub const GL_INT_SAMPLER_1D_ARRAY: std::os::raw::c_uint = 0x8DCE;
     pub const GL_INT_SAMPLER_2D: std::os::raw::c_uint = 0x8DCA;
@@ -471,6 +473,7 @@ pub mod enumerations {
     pub const GL_MAX_CUBE_MAP_TEXTURE_SIZE: std::os::raw::c_uint = 0x851C;
     pub const GL_MAX_DEPTH_TEXTURE_SAMPLES: std::os::raw::c_uint = 0x910F;
     pub const GL_MAX_DRAW_BUFFERS: std::os::raw::c_uint = 0x8824;
+    pub const GL_MAX_DUAL_SOURCE_DRAW_BUFFERS: std::os::raw::c_uint = 0x88FC;
     pub const GL_MAX_ELEMENTS_INDICES: std::os::raw::c_uint = 0x80E9;
     pub const GL_MAX_ELEMENTS_VERTICES: std::os::raw::c_uint = 0x80E8;
     pub const GL_MAX_FRAGMENT_INPUT_COMPONENTS: std::os::raw::c_uint = 0x9125;
@@ -531,6 +534,8 @@ pub mod enumerations {
     pub const GL_ONE_MINUS_CONSTANT_COLOR: std::os::raw::c_uint = 0x8002;
     pub const GL_ONE_MINUS_DST_ALPHA: std::os::raw::c_uint = 0x0305;
     pub const GL_ONE_MINUS_DST_COLOR: std::os::raw::c_uint = 0x0307;
+    pub const GL_ONE_MINUS_SRC1_ALPHA: std::os::raw::c_uint = 0x88FB;
+    pub const GL_ONE_MINUS_SRC1_COLOR: std::os::raw::c_uint = 0x88FA;
     pub const GL_ONE_MINUS_SRC_ALPHA: std::os::raw::c_uint = 0x0303;
     pub const GL_ONE_MINUS_SRC_COLOR: std::os::raw::c_uint = 0x0301;
     pub const GL_OR: std::os::raw::c_uint = 0x1507;
@@ -639,6 +644,7 @@ pub mod enumerations {
     pub const GL_RGB: std::os::raw::c_uint = 0x1907;
     pub const GL_RGB10: std::os::raw::c_uint = 0x8052;
     pub const GL_RGB10_A2: std::os::raw::c_uint = 0x8059;
+    pub const GL_RGB10_A2UI: std::os::raw::c_uint = 0x906F;
     pub const GL_RGB12: std::os::raw::c_uint = 0x8053;
     pub const GL_RGB16: std::os::raw::c_uint = 0x8054;
     pub const GL_RGB16F: std::os::raw::c_uint = 0x881B;
@@ -689,6 +695,7 @@ pub mod enumerations {
     pub const GL_SAMPLER_2D_RECT_SHADOW: std::os::raw::c_uint = 0x8B64;
     pub const GL_SAMPLER_2D_SHADOW: std::os::raw::c_uint = 0x8B62;
     pub const GL_SAMPLER_3D: std::os::raw::c_uint = 0x8B5F;
+    pub const GL_SAMPLER_BINDING: std::os::raw::c_uint = 0x8919;
     pub const GL_SAMPLER_BUFFER: std::os::raw::c_uint = 0x8DC2;
     pub const GL_SAMPLER_CUBE: std::os::raw::c_uint = 0x8B60;
     pub const GL_SAMPLER_CUBE_SHADOW: std::os::raw::c_uint = 0x8DC5;
@@ -718,6 +725,7 @@ pub mod enumerations {
     pub const GL_SMOOTH_POINT_SIZE_GRANULARITY: std::os::raw::c_uint = 0x0B13;
     pub const GL_SMOOTH_POINT_SIZE_RANGE: std::os::raw::c_uint = 0x0B12;
     pub const GL_SRC1_ALPHA: std::os::raw::c_uint = 0x8589;
+    pub const GL_SRC1_COLOR: std::os::raw::c_uint = 0x88F9;
     pub const GL_SRC_ALPHA: std::os::raw::c_uint = 0x0302;
     pub const GL_SRC_ALPHA_SATURATE: std::os::raw::c_uint = 0x0308;
     pub const GL_SRC_COLOR: std::os::raw::c_uint = 0x0300;
@@ -854,12 +862,19 @@ pub mod enumerations {
     pub const GL_TEXTURE_SAMPLES: std::os::raw::c_uint = 0x9106;
     pub const GL_TEXTURE_SHARED_SIZE: std::os::raw::c_uint = 0x8C3F;
     pub const GL_TEXTURE_STENCIL_SIZE: std::os::raw::c_uint = 0x88F1;
+    pub const GL_TEXTURE_SWIZZLE_A: std::os::raw::c_uint = 0x8E45;
+    pub const GL_TEXTURE_SWIZZLE_B: std::os::raw::c_uint = 0x8E44;
+    pub const GL_TEXTURE_SWIZZLE_G: std::os::raw::c_uint = 0x8E43;
+    pub const GL_TEXTURE_SWIZZLE_R: std::os::raw::c_uint = 0x8E42;
+    pub const GL_TEXTURE_SWIZZLE_RGBA: std::os::raw::c_uint = 0x8E46;
     pub const GL_TEXTURE_WIDTH: std::os::raw::c_uint = 0x1000;
     pub const GL_TEXTURE_WRAP_R: std::os::raw::c_uint = 0x8072;
     pub const GL_TEXTURE_WRAP_S: std::os::raw::c_uint = 0x2802;
     pub const GL_TEXTURE_WRAP_T: std::os::raw::c_uint = 0x2803;
     pub const GL_TIMEOUT_EXPIRED: std::os::raw::c_uint = 0x911B;
     pub const GL_TIMEOUT_IGNORED: u64 = 0xFFFFFFFFFFFFFFFF;
+    pub const GL_TIMESTAMP: std::os::raw::c_uint = 0x8E28;
+    pub const GL_TIME_ELAPSED: std::os::raw::c_uint = 0x88BF;
     pub const GL_TRANSFORM_FEEDBACK_BUFFER: std::os::raw::c_uint = 0x8C8E;
     pub const GL_TRANSFORM_FEEDBACK_BUFFER_BINDING: std::os::raw::c_uint = 0x8C8F;
     pub const GL_TRANSFORM_FEEDBACK_BUFFER_MODE: std::os::raw::c_uint = 0x8C7F;
@@ -942,6 +957,7 @@ pub mod enumerations {
     pub const GL_VERSION: std::os::raw::c_uint = 0x1F02;
     pub const GL_VERTEX_ARRAY_BINDING: std::os::raw::c_uint = 0x85B5;
     pub const GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING: std::os::raw::c_uint = 0x889F;
+    pub const GL_VERTEX_ATTRIB_ARRAY_DIVISOR: std::os::raw::c_uint = 0x88FE;
     pub const GL_VERTEX_ATTRIB_ARRAY_ENABLED: std::os::raw::c_uint = 0x8622;
     pub const GL_VERTEX_ATTRIB_ARRAY_INTEGER: std::os::raw::c_uint = 0x88FD;
     pub const GL_VERTEX_ATTRIB_ARRAY_NORMALIZED: std::os::raw::c_uint = 0x886A;
@@ -1031,6 +1047,17 @@ pub mod functions {
         )(program, color, name)
     }
     #[inline]
+    pub unsafe fn BindFragDataLocationIndexed(
+        program: GLuint,
+        colorNumber: GLuint,
+        index: GLuint,
+        name: *const GLchar,
+    ) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLuint, GLuint, *const GLchar) -> ()>(
+            storage::BindFragDataLocationIndexed.ptr,
+        )(program, colorNumber, index, name)
+    }
+    #[inline]
     pub unsafe fn BindFramebuffer(target: GLenum, framebuffer: GLuint) -> () {
         mem::transmute::<_, extern "system" fn(GLenum, GLuint) -> ()>(storage::BindFramebuffer.ptr)(
             target,
@@ -1042,6 +1069,12 @@ pub mod functions {
         mem::transmute::<_, extern "system" fn(GLenum, GLuint) -> ()>(storage::BindRenderbuffer.ptr)(
             target,
             renderbuffer,
+        )
+    }
+    #[inline]
+    pub unsafe fn BindSampler(unit: GLuint, sampler: GLuint) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLuint) -> ()>(storage::BindSampler.ptr)(
+            unit, sampler,
         )
     }
     #[inline]
@@ -1570,6 +1603,12 @@ pub mod functions {
         )(n, renderbuffers)
     }
     #[inline]
+    pub unsafe fn DeleteSamplers(count: GLsizei, samplers: *const GLuint) -> () {
+        mem::transmute::<_, extern "system" fn(GLsizei, *const GLuint) -> ()>(
+            storage::DeleteSamplers.ptr,
+        )(count, samplers)
+    }
+    #[inline]
     pub unsafe fn DeleteShader(shader: GLuint) -> () {
         mem::transmute::<_, extern "system" fn(GLuint) -> ()>(storage::DeleteShader.ptr)(shader)
     }
@@ -1916,6 +1955,12 @@ pub mod functions {
         )(n, renderbuffers)
     }
     #[inline]
+    pub unsafe fn GenSamplers(count: GLsizei, samplers: *mut GLuint) -> () {
+        mem::transmute::<_, extern "system" fn(GLsizei, *mut GLuint) -> ()>(
+            storage::GenSamplers.ptr,
+        )(count, samplers)
+    }
+    #[inline]
     pub unsafe fn GenTextures(n: GLsizei, textures: *mut GLuint) -> () {
         mem::transmute::<_, extern "system" fn(GLsizei, *mut GLuint) -> ()>(
             storage::GenTextures.ptr,
@@ -2131,6 +2176,12 @@ pub mod functions {
         )
     }
     #[inline]
+    pub unsafe fn GetFragDataIndex(program: GLuint, name: *const GLchar) -> GLint {
+        mem::transmute::<_, extern "system" fn(GLuint, *const GLchar) -> GLint>(
+            storage::GetFragDataIndex.ptr,
+        )(program, name)
+    }
+    #[inline]
     pub unsafe fn GetFragDataLocation(program: GLuint, name: *const GLchar) -> GLint {
         mem::transmute::<_, extern "system" fn(GLuint, *const GLchar) -> GLint>(
             storage::GetFragDataLocation.ptr,
@@ -2195,9 +2246,21 @@ pub mod functions {
         )(program, pname, params)
     }
     #[inline]
+    pub unsafe fn GetQueryObjecti64v(id: GLuint, pname: GLenum, params: *mut GLint64) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, *mut GLint64) -> ()>(
+            storage::GetQueryObjecti64v.ptr,
+        )(id, pname, params)
+    }
+    #[inline]
     pub unsafe fn GetQueryObjectiv(id: GLuint, pname: GLenum, params: *mut GLint) -> () {
         mem::transmute::<_, extern "system" fn(GLuint, GLenum, *mut GLint) -> ()>(
             storage::GetQueryObjectiv.ptr,
+        )(id, pname, params)
+    }
+    #[inline]
+    pub unsafe fn GetQueryObjectui64v(id: GLuint, pname: GLenum, params: *mut GLuint64) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, *mut GLuint64) -> ()>(
+            storage::GetQueryObjectui64v.ptr,
         )(id, pname, params)
     }
     #[inline]
@@ -2221,6 +2284,38 @@ pub mod functions {
         mem::transmute::<_, extern "system" fn(GLenum, GLenum, *mut GLint) -> ()>(
             storage::GetRenderbufferParameteriv.ptr,
         )(target, pname, params)
+    }
+    #[inline]
+    pub unsafe fn GetSamplerParameterIiv(sampler: GLuint, pname: GLenum, params: *mut GLint) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, *mut GLint) -> ()>(
+            storage::GetSamplerParameterIiv.ptr,
+        )(sampler, pname, params)
+    }
+    #[inline]
+    pub unsafe fn GetSamplerParameterIuiv(
+        sampler: GLuint,
+        pname: GLenum,
+        params: *mut GLuint,
+    ) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, *mut GLuint) -> ()>(
+            storage::GetSamplerParameterIuiv.ptr,
+        )(sampler, pname, params)
+    }
+    #[inline]
+    pub unsafe fn GetSamplerParameterfv(
+        sampler: GLuint,
+        pname: GLenum,
+        params: *mut GLfloat,
+    ) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, *mut GLfloat) -> ()>(
+            storage::GetSamplerParameterfv.ptr,
+        )(sampler, pname, params)
+    }
+    #[inline]
+    pub unsafe fn GetSamplerParameteriv(sampler: GLuint, pname: GLenum, params: *mut GLint) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, *mut GLint) -> ()>(
+            storage::GetSamplerParameteriv.ptr,
+        )(sampler, pname, params)
     }
     #[inline]
     pub unsafe fn GetShaderInfoLog(
@@ -2486,6 +2581,12 @@ pub mod functions {
         )
     }
     #[inline]
+    pub unsafe fn IsSampler(sampler: GLuint) -> GLboolean {
+        mem::transmute::<_, extern "system" fn(GLuint) -> GLboolean>(storage::IsSampler.ptr)(
+            sampler,
+        )
+    }
+    #[inline]
     pub unsafe fn IsShader(shader: GLuint) -> GLboolean {
         mem::transmute::<_, extern "system" fn(GLuint) -> GLboolean>(storage::IsShader.ptr)(shader)
     }
@@ -2656,6 +2757,12 @@ pub mod functions {
         mem::transmute::<_, extern "system" fn(GLenum) -> ()>(storage::ProvokingVertex.ptr)(mode)
     }
     #[inline]
+    pub unsafe fn QueryCounter(id: GLuint, target: GLenum) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum) -> ()>(storage::QueryCounter.ptr)(
+            id, target,
+        )
+    }
+    #[inline]
     pub unsafe fn ReadBuffer(src: GLenum) -> () {
         mem::transmute::<_, extern "system" fn(GLenum) -> ()>(storage::ReadBuffer.ptr)(src)
     }
@@ -2716,6 +2823,42 @@ pub mod functions {
         mem::transmute::<_, extern "system" fn(GLuint, GLbitfield) -> ()>(storage::SampleMaski.ptr)(
             maskNumber, mask,
         )
+    }
+    #[inline]
+    pub unsafe fn SamplerParameterIiv(sampler: GLuint, pname: GLenum, param: *const GLint) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, *const GLint) -> ()>(
+            storage::SamplerParameterIiv.ptr,
+        )(sampler, pname, param)
+    }
+    #[inline]
+    pub unsafe fn SamplerParameterIuiv(sampler: GLuint, pname: GLenum, param: *const GLuint) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, *const GLuint) -> ()>(
+            storage::SamplerParameterIuiv.ptr,
+        )(sampler, pname, param)
+    }
+    #[inline]
+    pub unsafe fn SamplerParameterf(sampler: GLuint, pname: GLenum, param: GLfloat) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, GLfloat) -> ()>(
+            storage::SamplerParameterf.ptr,
+        )(sampler, pname, param)
+    }
+    #[inline]
+    pub unsafe fn SamplerParameterfv(sampler: GLuint, pname: GLenum, param: *const GLfloat) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, *const GLfloat) -> ()>(
+            storage::SamplerParameterfv.ptr,
+        )(sampler, pname, param)
+    }
+    #[inline]
+    pub unsafe fn SamplerParameteri(sampler: GLuint, pname: GLenum, param: GLint) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, GLint) -> ()>(
+            storage::SamplerParameteri.ptr,
+        )(sampler, pname, param)
+    }
+    #[inline]
+    pub unsafe fn SamplerParameteriv(sampler: GLuint, pname: GLenum, param: *const GLint) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, *const GLint) -> ()>(
+            storage::SamplerParameteriv.ptr,
+        )(sampler, pname, param)
     }
     #[inline]
     pub unsafe fn Scissor(x: GLint, y: GLint, width: GLsizei, height: GLsizei) -> () {
@@ -3587,6 +3730,12 @@ pub mod functions {
         )(index, v)
     }
     #[inline]
+    pub unsafe fn VertexAttribDivisor(index: GLuint, divisor: GLuint) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLuint) -> ()>(
+            storage::VertexAttribDivisor.ptr,
+        )(index, divisor)
+    }
+    #[inline]
     pub unsafe fn VertexAttribI1i(index: GLuint, x: GLint) -> () {
         mem::transmute::<_, extern "system" fn(GLuint, GLint) -> ()>(storage::VertexAttribI1i.ptr)(
             index, x,
@@ -3726,6 +3875,94 @@ pub mod functions {
         >(storage::VertexAttribIPointer.ptr)(index, size, type_, stride, pointer)
     }
     #[inline]
+    pub unsafe fn VertexAttribP1ui(
+        index: GLuint,
+        type_: GLenum,
+        normalized: GLboolean,
+        value: GLuint,
+    ) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, GLboolean, GLuint) -> ()>(
+            storage::VertexAttribP1ui.ptr,
+        )(index, type_, normalized, value)
+    }
+    #[inline]
+    pub unsafe fn VertexAttribP1uiv(
+        index: GLuint,
+        type_: GLenum,
+        normalized: GLboolean,
+        value: *const GLuint,
+    ) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, GLboolean, *const GLuint) -> ()>(
+            storage::VertexAttribP1uiv.ptr,
+        )(index, type_, normalized, value)
+    }
+    #[inline]
+    pub unsafe fn VertexAttribP2ui(
+        index: GLuint,
+        type_: GLenum,
+        normalized: GLboolean,
+        value: GLuint,
+    ) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, GLboolean, GLuint) -> ()>(
+            storage::VertexAttribP2ui.ptr,
+        )(index, type_, normalized, value)
+    }
+    #[inline]
+    pub unsafe fn VertexAttribP2uiv(
+        index: GLuint,
+        type_: GLenum,
+        normalized: GLboolean,
+        value: *const GLuint,
+    ) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, GLboolean, *const GLuint) -> ()>(
+            storage::VertexAttribP2uiv.ptr,
+        )(index, type_, normalized, value)
+    }
+    #[inline]
+    pub unsafe fn VertexAttribP3ui(
+        index: GLuint,
+        type_: GLenum,
+        normalized: GLboolean,
+        value: GLuint,
+    ) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, GLboolean, GLuint) -> ()>(
+            storage::VertexAttribP3ui.ptr,
+        )(index, type_, normalized, value)
+    }
+    #[inline]
+    pub unsafe fn VertexAttribP3uiv(
+        index: GLuint,
+        type_: GLenum,
+        normalized: GLboolean,
+        value: *const GLuint,
+    ) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, GLboolean, *const GLuint) -> ()>(
+            storage::VertexAttribP3uiv.ptr,
+        )(index, type_, normalized, value)
+    }
+    #[inline]
+    pub unsafe fn VertexAttribP4ui(
+        index: GLuint,
+        type_: GLenum,
+        normalized: GLboolean,
+        value: GLuint,
+    ) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, GLboolean, GLuint) -> ()>(
+            storage::VertexAttribP4ui.ptr,
+        )(index, type_, normalized, value)
+    }
+    #[inline]
+    pub unsafe fn VertexAttribP4uiv(
+        index: GLuint,
+        type_: GLenum,
+        normalized: GLboolean,
+        value: *const GLuint,
+    ) -> () {
+        mem::transmute::<_, extern "system" fn(GLuint, GLenum, GLboolean, *const GLuint) -> ()>(
+            storage::VertexAttribP4uiv.ptr,
+        )(index, type_, normalized, value)
+    }
+    #[inline]
     pub unsafe fn VertexAttribPointer(
         index: GLuint,
         size: GLint,
@@ -3806,11 +4043,19 @@ mod storage {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
+    pub static mut BindFragDataLocationIndexed: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
     pub static mut BindFramebuffer: FnPtr = FnPtr {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
     pub static mut BindRenderbuffer: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut BindSampler: FnPtr = FnPtr {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
@@ -3990,6 +4235,10 @@ mod storage {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
+    pub static mut DeleteSamplers: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
     pub static mut DeleteShader: FnPtr = FnPtr {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
@@ -4158,6 +4407,10 @@ mod storage {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
+    pub static mut GenSamplers: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
     pub static mut GenTextures: FnPtr = FnPtr {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
@@ -4242,6 +4495,10 @@ mod storage {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
+    pub static mut GetFragDataIndex: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
     pub static mut GetFragDataLocation: FnPtr = FnPtr {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
@@ -4278,7 +4535,15 @@ mod storage {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
+    pub static mut GetQueryObjecti64v: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
     pub static mut GetQueryObjectiv: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut GetQueryObjectui64v: FnPtr = FnPtr {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
@@ -4291,6 +4556,22 @@ mod storage {
         is_loaded: false,
     };
     pub static mut GetRenderbufferParameteriv: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut GetSamplerParameterIiv: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut GetSamplerParameterIuiv: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut GetSamplerParameterfv: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut GetSamplerParameteriv: FnPtr = FnPtr {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
@@ -4430,6 +4711,10 @@ mod storage {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
+    pub static mut IsSampler: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
     pub static mut IsShader: FnPtr = FnPtr {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
@@ -4522,6 +4807,10 @@ mod storage {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
+    pub static mut QueryCounter: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
     pub static mut ReadBuffer: FnPtr = FnPtr {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
@@ -4543,6 +4832,30 @@ mod storage {
         is_loaded: false,
     };
     pub static mut SampleMaski: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut SamplerParameterIiv: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut SamplerParameterIuiv: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut SamplerParameterf: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut SamplerParameterfv: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut SamplerParameteri: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut SamplerParameteriv: FnPtr = FnPtr {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
@@ -4934,6 +5247,10 @@ mod storage {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
+    pub static mut VertexAttribDivisor: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
     pub static mut VertexAttribI1i: FnPtr = FnPtr {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
@@ -5018,6 +5335,38 @@ mod storage {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
     };
+    pub static mut VertexAttribP1ui: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut VertexAttribP1uiv: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut VertexAttribP2ui: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut VertexAttribP2uiv: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut VertexAttribP3ui: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut VertexAttribP3uiv: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut VertexAttribP4ui: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
+    pub static mut VertexAttribP4uiv: FnPtr = FnPtr {
+        ptr: FnPtr::not_initialized as *const raw::c_void,
+        is_loaded: false,
+    };
     pub static mut VertexAttribPointer: FnPtr = FnPtr {
         ptr: FnPtr::not_initialized as *const raw::c_void,
         is_loaded: false,
@@ -5047,8 +5396,10 @@ where
         storage::BindBufferBase.load(&mut loadfn, "glBindBufferBase");
         storage::BindBufferRange.load(&mut loadfn, "glBindBufferRange");
         storage::BindFragDataLocation.load(&mut loadfn, "glBindFragDataLocation");
+        storage::BindFragDataLocationIndexed.load(&mut loadfn, "glBindFragDataLocationIndexed");
         storage::BindFramebuffer.load(&mut loadfn, "glBindFramebuffer");
         storage::BindRenderbuffer.load(&mut loadfn, "glBindRenderbuffer");
+        storage::BindSampler.load(&mut loadfn, "glBindSampler");
         storage::BindTexture.load(&mut loadfn, "glBindTexture");
         storage::BindVertexArray.load(&mut loadfn, "glBindVertexArray");
         storage::BlendColor.load(&mut loadfn, "glBlendColor");
@@ -5093,6 +5444,7 @@ where
         storage::DeleteProgram.load(&mut loadfn, "glDeleteProgram");
         storage::DeleteQueries.load(&mut loadfn, "glDeleteQueries");
         storage::DeleteRenderbuffers.load(&mut loadfn, "glDeleteRenderbuffers");
+        storage::DeleteSamplers.load(&mut loadfn, "glDeleteSamplers");
         storage::DeleteShader.load(&mut loadfn, "glDeleteShader");
         storage::DeleteSync.load(&mut loadfn, "glDeleteSync");
         storage::DeleteTextures.load(&mut loadfn, "glDeleteTextures");
@@ -5136,6 +5488,7 @@ where
         storage::GenFramebuffers.load(&mut loadfn, "glGenFramebuffers");
         storage::GenQueries.load(&mut loadfn, "glGenQueries");
         storage::GenRenderbuffers.load(&mut loadfn, "glGenRenderbuffers");
+        storage::GenSamplers.load(&mut loadfn, "glGenSamplers");
         storage::GenTextures.load(&mut loadfn, "glGenTextures");
         storage::GenVertexArrays.load(&mut loadfn, "glGenVertexArrays");
         storage::GenerateMipmap.load(&mut loadfn, "glGenerateMipmap");
@@ -5157,6 +5510,7 @@ where
         storage::GetDoublev.load(&mut loadfn, "glGetDoublev");
         storage::GetError.load(&mut loadfn, "glGetError");
         storage::GetFloatv.load(&mut loadfn, "glGetFloatv");
+        storage::GetFragDataIndex.load(&mut loadfn, "glGetFragDataIndex");
         storage::GetFragDataLocation.load(&mut loadfn, "glGetFragDataLocation");
         storage::GetFramebufferAttachmentParameteriv
             .load(&mut loadfn, "glGetFramebufferAttachmentParameteriv");
@@ -5167,10 +5521,16 @@ where
         storage::GetMultisamplefv.load(&mut loadfn, "glGetMultisamplefv");
         storage::GetProgramInfoLog.load(&mut loadfn, "glGetProgramInfoLog");
         storage::GetProgramiv.load(&mut loadfn, "glGetProgramiv");
+        storage::GetQueryObjecti64v.load(&mut loadfn, "glGetQueryObjecti64v");
         storage::GetQueryObjectiv.load(&mut loadfn, "glGetQueryObjectiv");
+        storage::GetQueryObjectui64v.load(&mut loadfn, "glGetQueryObjectui64v");
         storage::GetQueryObjectuiv.load(&mut loadfn, "glGetQueryObjectuiv");
         storage::GetQueryiv.load(&mut loadfn, "glGetQueryiv");
         storage::GetRenderbufferParameteriv.load(&mut loadfn, "glGetRenderbufferParameteriv");
+        storage::GetSamplerParameterIiv.load(&mut loadfn, "glGetSamplerParameterIiv");
+        storage::GetSamplerParameterIuiv.load(&mut loadfn, "glGetSamplerParameterIuiv");
+        storage::GetSamplerParameterfv.load(&mut loadfn, "glGetSamplerParameterfv");
+        storage::GetSamplerParameteriv.load(&mut loadfn, "glGetSamplerParameteriv");
         storage::GetShaderInfoLog.load(&mut loadfn, "glGetShaderInfoLog");
         storage::GetShaderSource.load(&mut loadfn, "glGetShaderSource");
         storage::GetShaderiv.load(&mut loadfn, "glGetShaderiv");
@@ -5205,6 +5565,7 @@ where
         storage::IsProgram.load(&mut loadfn, "glIsProgram");
         storage::IsQuery.load(&mut loadfn, "glIsQuery");
         storage::IsRenderbuffer.load(&mut loadfn, "glIsRenderbuffer");
+        storage::IsSampler.load(&mut loadfn, "glIsSampler");
         storage::IsShader.load(&mut loadfn, "glIsShader");
         storage::IsSync.load(&mut loadfn, "glIsSync");
         storage::IsTexture.load(&mut loadfn, "glIsTexture");
@@ -5228,6 +5589,7 @@ where
         storage::PolygonOffset.load(&mut loadfn, "glPolygonOffset");
         storage::PrimitiveRestartIndex.load(&mut loadfn, "glPrimitiveRestartIndex");
         storage::ProvokingVertex.load(&mut loadfn, "glProvokingVertex");
+        storage::QueryCounter.load(&mut loadfn, "glQueryCounter");
         storage::ReadBuffer.load(&mut loadfn, "glReadBuffer");
         storage::ReadPixels.load(&mut loadfn, "glReadPixels");
         storage::RenderbufferStorage.load(&mut loadfn, "glRenderbufferStorage");
@@ -5235,6 +5597,12 @@ where
             .load(&mut loadfn, "glRenderbufferStorageMultisample");
         storage::SampleCoverage.load(&mut loadfn, "glSampleCoverage");
         storage::SampleMaski.load(&mut loadfn, "glSampleMaski");
+        storage::SamplerParameterIiv.load(&mut loadfn, "glSamplerParameterIiv");
+        storage::SamplerParameterIuiv.load(&mut loadfn, "glSamplerParameterIuiv");
+        storage::SamplerParameterf.load(&mut loadfn, "glSamplerParameterf");
+        storage::SamplerParameterfv.load(&mut loadfn, "glSamplerParameterfv");
+        storage::SamplerParameteri.load(&mut loadfn, "glSamplerParameteri");
+        storage::SamplerParameteriv.load(&mut loadfn, "glSamplerParameteriv");
         storage::Scissor.load(&mut loadfn, "glScissor");
         storage::ShaderSource.load(&mut loadfn, "glShaderSource");
         storage::StencilFunc.load(&mut loadfn, "glStencilFunc");
@@ -5332,6 +5700,7 @@ where
         storage::VertexAttrib4ubv.load(&mut loadfn, "glVertexAttrib4ubv");
         storage::VertexAttrib4uiv.load(&mut loadfn, "glVertexAttrib4uiv");
         storage::VertexAttrib4usv.load(&mut loadfn, "glVertexAttrib4usv");
+        storage::VertexAttribDivisor.load(&mut loadfn, "glVertexAttribDivisor");
         storage::VertexAttribI1i.load(&mut loadfn, "glVertexAttribI1i");
         storage::VertexAttribI1iv.load(&mut loadfn, "glVertexAttribI1iv");
         storage::VertexAttribI1ui.load(&mut loadfn, "glVertexAttribI1ui");
@@ -5353,6 +5722,14 @@ where
         storage::VertexAttribI4uiv.load(&mut loadfn, "glVertexAttribI4uiv");
         storage::VertexAttribI4usv.load(&mut loadfn, "glVertexAttribI4usv");
         storage::VertexAttribIPointer.load(&mut loadfn, "glVertexAttribIPointer");
+        storage::VertexAttribP1ui.load(&mut loadfn, "glVertexAttribP1ui");
+        storage::VertexAttribP1uiv.load(&mut loadfn, "glVertexAttribP1uiv");
+        storage::VertexAttribP2ui.load(&mut loadfn, "glVertexAttribP2ui");
+        storage::VertexAttribP2uiv.load(&mut loadfn, "glVertexAttribP2uiv");
+        storage::VertexAttribP3ui.load(&mut loadfn, "glVertexAttribP3ui");
+        storage::VertexAttribP3uiv.load(&mut loadfn, "glVertexAttribP3uiv");
+        storage::VertexAttribP4ui.load(&mut loadfn, "glVertexAttribP4ui");
+        storage::VertexAttribP4uiv.load(&mut loadfn, "glVertexAttribP4uiv");
         storage::VertexAttribPointer.load(&mut loadfn, "glVertexAttribPointer");
         storage::Viewport.load(&mut loadfn, "glViewport");
         storage::WaitSync.load(&mut loadfn, "glWaitSync");

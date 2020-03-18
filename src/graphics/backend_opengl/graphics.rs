@@ -36,14 +36,14 @@ impl GLGraphics {
         let uniform_viewport: Option<gl::UniformLocation>;
 
         let vertex_shader_source = r#"
-            #version 120
+            #version 330
             
-            attribute vec2 aPos;
-            attribute vec4 aColor;
+            layout(location = 0) in vec2 aPos;
+            layout(location = 2) in vec4 aColor;
 
             uniform vec2 uViewport;
     
-            varying vec4 vColor;
+            out vec4 vColor;
     
             void main() {
                 gl_Position = vec4(aPos.x * 2 / uViewport.x - 1, 1 - aPos.y * 2 / uViewport.y, 0.0, 1.0);
@@ -51,9 +51,9 @@ impl GLGraphics {
             }
         "#;
         let fragment_shader_source = r#"
-            #version 120
+            #version 330
             
-            varying vec4 vColor;
+            in vec4 vColor;
 
             void main() {
                 gl_FragColor = vColor;

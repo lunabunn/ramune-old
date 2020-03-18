@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use super::bindings::gl32 as gl;
+use super::bindings::gl33 as gl;
 
 macro_rules! newtype {
     ($x:ident: $y:ty) => {
