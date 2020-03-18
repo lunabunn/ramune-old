@@ -1,5 +1,6 @@
-use crate::graphics::GraphicsBackends;
+use crate::graphics::{GraphicsHandle, TextureManagerHandle};
 
 pub struct Context {
-    pub graphics: GraphicsBackends,
+    pub graphics: GraphicsHandle,
+    pub(crate) texture_manager: TextureManagerHandle,
 }

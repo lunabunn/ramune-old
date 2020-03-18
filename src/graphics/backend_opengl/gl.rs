@@ -11,6 +11,12 @@ macro_rules! newtype {
                 x.0
             }
         }
+
+        impl From<$y> for $x {
+            fn from(x: $y) -> Self {
+                $x(x)
+            }
+        }
     };
 
     ($x:ident: $y:ty, $($a:ident: $b:ty),+) => {
@@ -27,6 +33,7 @@ newtype!(
     Program: u32,
     VBO: u32,
     UniformLocation: i32,
+    AttribLocation: u32,
     BufferBit: u32,
     Texture: u32,
 );
@@ -118,6 +125,18 @@ impl Program {
             let uniform = gl::GetUniformLocation(self.into(), c_str.as_ptr());
             if uniform != -1 {
                 Some(UniformLocation(uniform))
+            } else {
+                None
+            }
+        }
+    }
+
+    pub fn get_attrib_location(self, name: &str) -> Option<AttribLocation> {
+        unsafe {
+            let c_str = std::ffi::CString::new(name).unwrap();
+            let attrib = gl::GetAttribLocation(self.into(), c_str.as_ptr());
+            if attrib != -1 {
+                Some(AttribLocation(attrib as u32))
             } else {
                 None
             }
@@ -266,6 +285,52 @@ pub enum NumberEnum {
     Double = gl::GL_DOUBLE as isize,
 }
 
+#[derive(Clone, Copy)]
+pub enum Capability {
+    Blend = gl::GL_BLEND as isize,
+    CullFace = gl::GL_CULL_FACE as isize,
+    DepthTest = gl::GL_DEPTH_TEST as isize,
+    Dither = gl::GL_DITHER as isize,
+    PolygonOffsetFill = gl::GL_POLYGON_OFFSET_FILL as isize,
+    SampleAlphaToCoverage = gl::GL_SAMPLE_ALPHA_TO_COVERAGE as isize,
+    SampleCoverage = gl::GL_SAMPLE_COVERAGE as isize,
+    ScissorTest = gl::GL_SCISSOR_TEST as isize,
+    StencilTest = gl::GL_STENCIL_TEST as isize,
+}
+
+#[derive(Clone, Copy)]
+pub enum BlendFactor {
+    Zero = gl::GL_ZERO as isize,
+    One = gl::GL_ONE as isize,
+    SrcColor = gl::GL_SRC_COLOR as isize,
+    OneMinusSrcColor = gl::GL_ONE_MINUS_SRC_COLOR as isize,
+    DstColor = gl::GL_DST_COLOR as isize,
+    OneMinusDstColor = gl::GL_ONE_MINUS_DST_COLOR as isize,
+    SrcAlpha = gl::GL_SRC_ALPHA as isize,
+    OneMinusSrcAlpha = gl::GL_ONE_MINUS_SRC_ALPHA as isize,
+    DstAlpha = gl::GL_DST_ALPHA as isize,
+    OneMinusDstAlpha = gl::GL_ONE_MINUS_DST_ALPHA as isize,
+    ConstantColor = gl::GL_CONSTANT_COLOR as isize,
+    OneMinusConstantColor = gl::GL_ONE_MINUS_CONSTANT_COLOR as isize,
+    ConstantAlpha = gl::GL_CONSTANT_ALPHA as isize,
+    OneMinusConstantAlpha = gl::GL_ONE_MINUS_CONSTANT_ALPHA as isize,
+    SrcAlphaSaturate = gl::GL_SRC_ALPHA_SATURATE as isize,
+}
+
+#[derive(Clone, Copy)]
+pub enum WrapMode {
+    ClampToEdge = gl::GL_CLAMP_TO_EDGE as isize,
+    ClampToBorder = gl::GL_CLAMP_TO_BORDER as isize,
+    MirroredRepeat = gl::GL_MIRRORED_REPEAT as isize,
+    Repeat = gl::GL_REPEAT as isize,
+}
+
+#[derive(Clone, Copy)]
+pub enum FilterMode {
+    Nearest = gl::GL_NEAREST as isize,
+    Linear = gl::GL_LINEAR as isize,
+}
+
 pub trait SetUniform {
     fn uniform_1(uniform: Option<UniformLocation>, x: Self);
     fn uniform_2(uniform: Option<UniformLocation>, x: Self, y: Self);
@@ -365,6 +430,27 @@ impl SetUniform for f32 {
 
 pub trait SetTextureParameter {
     fn tex_parameter(target: TextureKind, pname: TextureParameter, param: Self);
+}
+impl SetTextureParameter for WrapMode {
+    fn tex_parameter(target: TextureKind, pname: TextureParameter, param: Self) {
+        unsafe {
+            gl::TexParameteri(target as u32, pname as u32, param as i32);
+        }
+    }
+}
+impl SetTextureParameter for FilterMode {
+    fn tex_parameter(target: TextureKind, pname: TextureParameter, param: Self) {
+        unsafe {
+            gl::TexParameteri(target as u32, pname as u32, param as i32);
+        }
+    }
+}
+impl SetTextureParameter for u32 {
+    fn tex_parameter(target: TextureKind, pname: TextureParameter, param: Self) {
+        unsafe {
+            gl::TexParameteri(target as u32, pname as u32, param as i32);
+        }
+    }
 }
 impl SetTextureParameter for i32 {
     fn tex_parameter(target: TextureKind, pname: TextureParameter, param: Self) {
@@ -581,5 +667,17 @@ pub fn tex_image_2d(
 pub fn generate_mipmap(target: TextureKind) {
     unsafe {
         gl::GenerateMipmap(target as u32);
+    }
+}
+
+pub fn enable(cap: Capability) {
+    unsafe {
+        gl::Enable(cap as u32);
+    }
+}
+
+pub fn blend_func(sfactor: BlendFactor, dfactor: BlendFactor) {
+    unsafe {
+        gl::BlendFunc(sfactor as u32, dfactor as u32);
     }
 }
