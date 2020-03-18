@@ -1,4 +1,5 @@
 use crate::graphics;
+use crate::graphics::GraphicsHandle;
 use crate::Context;
 
 /// Runs the game with the given `options`, firing `callback` upon game loop events.
@@ -52,7 +53,7 @@ pub enum Event<'a> {
     /// Event fired every frame for game logic.
     Update(&'a mut Context),
     /// Event fired every frame for rendering.
-    Draw(&'a mut Context),
+    Draw(&'a mut Context, &'a mut GraphicsHandle),
     /// Event fired on window resize.
     WindowResized(&'a mut Context),
 }

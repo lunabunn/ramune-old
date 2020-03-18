@@ -1,6 +1,6 @@
-use crate::graphics::{GraphicsHandle, TextureManagerHandle};
+use crate::graphics::GraphicsContextHandle;
 
+#[allow(dead_code)]
 pub struct Context {
-    pub graphics: GraphicsHandle,
-    pub(crate) texture_manager: TextureManagerHandle,
+    pub(crate) graphics_context: GraphicsContextHandle,
 }

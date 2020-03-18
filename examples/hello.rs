@@ -31,8 +31,7 @@ fn main() {
         ramune::Event::Update(_) => {
             counter += 1;
         }
-        ramune::Event::Draw(ctx) => {
-            let g = &mut ctx.graphics;
+        ramune::Event::Draw(ctx, g) => {
             g.draw_subimage_scaled(
                 knights.unwrap(),
                 50.0,
@@ -44,7 +43,7 @@ fn main() {
                 16.0,
                 16.0,
             );
-            g.flush(Some(ramune::graphics::Color::rgb(128, 179, 77)));
+            g.flush(ctx, Some(ramune::graphics::Color::rgb(128, 179, 77)));
         }
         _ => {}
     });

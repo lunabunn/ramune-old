@@ -1,6 +1,6 @@
 use super::gl;
-use super::{GLGraphics, GLTextureManager};
-use crate::graphics::{GraphicsHandle, TextureManagerHandle};
+use super::{GLGraphics, GLGraphicsContext};
+use crate::graphics::{GraphicsContextHandle, GraphicsHandle};
 use crate::Event as GameEvent;
 use crate::{Context, GameOptions};
 use glutin::dpi::LogicalSize;
@@ -25,9 +25,9 @@ pub fn run(options: GameOptions, mut callback: impl FnMut(GameEvent) + 'static) 
     let windowed_context = unsafe { windowed_context.make_current().unwrap() };
 
     gl::load(|s| windowed_context.get_proc_address(s) as *const std::ffi::c_void);
+    let mut graphics = GraphicsHandle::GL(GLGraphics::new(&options));
     let mut context = Context {
-        graphics: GraphicsHandle::GL(GLGraphics::new(&options)),
-        texture_manager: TextureManagerHandle::GL(GLTextureManager),
+        graphics_context: GraphicsContextHandle::GL(GLGraphicsContext {}),
     };
 
     callback(GameEvent::Init(&mut context));
@@ -69,7 +69,7 @@ pub fn run(options: GameOptions, mut callback: impl FnMut(GameEvent) + 'static) 
             },
             Event::MainEventsCleared => {
                 callback(GameEvent::Update(&mut context));
-                callback(GameEvent::Draw(&mut context));
+                callback(GameEvent::Draw(&mut context, &mut graphics));
                 windowed_context.swap_buffers().unwrap();
             }
             _ => (),

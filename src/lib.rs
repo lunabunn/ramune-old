@@ -17,8 +17,6 @@ pub mod graphics {
         pub use game::*;
         mod graphics;
         pub use graphics::*;
-        mod texture;
-        pub use texture::*;
 
         mod bindings {
             pub mod gl33;

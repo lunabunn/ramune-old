@@ -1,5 +1,22 @@
-use super::backend_opengl::GLGraphics;
+use super::backend_opengl::{GLGraphics, GLGraphicsContext};
 use super::Texture;
+use crate::Context;
+
+pub(crate) trait GraphicsContext {
+    fn create_texture(&mut self, width: u32, height: u32, pixels: &[Color]) -> Texture;
+}
+
+pub(crate) enum GraphicsContextHandle {
+    GL(GLGraphicsContext),
+}
+
+impl GraphicsContext for GraphicsContextHandle {
+    fn create_texture(&mut self, width: u32, height: u32, pixels: &[Color]) -> Texture {
+        match self {
+            Self::GL(tm) => tm.create_texture(width, height, pixels),
+        }
+    }
+}
 
 pub trait Graphics {
     fn fill_rect(&mut self, x: f32, y: f32, w: f32, h: f32);
@@ -15,7 +32,7 @@ pub trait Graphics {
         sw: f32,
         sh: f32,
     );
-    fn flush(&mut self, clear_color: Option<Color>);
+    fn flush(&mut self, ctx: &mut Context, clear_color: Option<Color>);
 }
 
 pub enum GraphicsHandle {
@@ -104,9 +121,9 @@ impl GraphicsHandle {
         );
     }
 
-    pub fn flush(&mut self, clear_color: Option<Color>) {
+    pub fn flush(&mut self, ctx: &mut Context, clear_color: Option<Color>) {
         match self {
-            Self::GL(g) => g.flush(clear_color),
+            Self::GL(g) => g.flush(ctx, clear_color),
         }
     }
 }

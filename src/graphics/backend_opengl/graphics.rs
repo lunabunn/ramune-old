@@ -1,6 +1,56 @@
 use super::gl;
-use crate::graphics::{Color, Graphics, Texture};
-use crate::GameOptions;
+use crate::graphics::{Color, Graphics, GraphicsContext, Texture};
+use crate::{Context, GameOptions};
+
+pub struct GLGraphicsContext {}
+
+impl GraphicsContext for GLGraphicsContext {
+    fn create_texture(&mut self, width: u32, height: u32, pixels: &[Color]) -> Texture {
+        let tex = gl::Texture::new();
+        gl::bind_texture(gl::TextureKind::Texture2D, Some(tex));
+        let mut data = Vec::new();
+        for pixel in pixels {
+            data.push(pixel.r);
+            data.push(pixel.g);
+            data.push(pixel.b);
+            data.push(pixel.a);
+        }
+        gl::tex_parameter(
+            gl::TextureKind::Texture2D,
+            gl::TextureParameter::WrapS,
+            gl::WrapMode::Repeat,
+        );
+        gl::tex_parameter(
+            gl::TextureKind::Texture2D,
+            gl::TextureParameter::WrapT,
+            gl::WrapMode::Repeat,
+        );
+        gl::tex_parameter(
+            gl::TextureKind::Texture2D,
+            gl::TextureParameter::MinFilter,
+            gl::FilterMode::Nearest,
+        );
+        gl::tex_parameter(
+            gl::TextureKind::Texture2D,
+            gl::TextureParameter::MagFilter,
+            gl::FilterMode::Nearest,
+        );
+        gl::tex_image_2d(
+            gl::TextureKind::Texture2D,
+            0,
+            gl::TextureFormat::RGBA,
+            width,
+            height,
+            &data,
+        );
+
+        Texture {
+            id: tex.into(),
+            width,
+            height,
+        }
+    }
+}
 
 pub struct GLGraphics {
     vbo_a: gl::VBO,
@@ -266,7 +316,7 @@ impl Graphics for GLGraphics {
         });
     }
 
-    fn flush(&mut self, clear_color: Option<Color>) {
+    fn flush(&mut self, _: &mut Context, clear_color: Option<Color>) {
         let mut verts: Vec<f32> = Vec::default();
         let mut batches: Vec<Batch> = Vec::default();
 
