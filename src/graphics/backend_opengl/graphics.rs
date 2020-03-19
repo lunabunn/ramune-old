@@ -1,8 +1,18 @@
 use super::gl;
-use crate::graphics::{Color, Graphics, GraphicsContext, Texture};
+use crate::graphics::{Color, GraphicsCommand, GraphicsContext, Texture};
 use crate::{Context, GameOptions};
 
-pub struct GLGraphicsContext {}
+#[derive(Default)]
+pub struct GLGraphicsContext {
+    textures: Vec<gl::Texture>,
+    dimensions: Vec<(u32, u32)>,
+}
+
+impl GLGraphicsContext {
+    pub fn get_texture(&self, index: usize) -> gl::Texture {
+        self.textures[index]
+    }
+}
 
 impl GraphicsContext for GLGraphicsContext {
     fn create_texture(&mut self, width: u32, height: u32, pixels: &[Color]) -> Texture {
@@ -44,29 +54,20 @@ impl GraphicsContext for GLGraphicsContext {
             &data,
         );
 
-        Texture {
-            id: tex.into(),
-            width,
-            height,
-        }
+        self.textures.push(tex);
+        self.dimensions.push((width, height));
+        Texture(self.textures.len() - 1)
+    }
+
+    fn texture_dimensions(&self, tex: Texture) -> (u32, u32) {
+        self.dimensions[tex.0]
     }
 }
 
-pub struct GLGraphics {
-    vbo_a: gl::VBO,
-    vbo_b: gl::VBO,
+pub(crate) struct GLGraphics {
+    vbo: gl::VBO,
     default_program: gl::Program,
-
     blank_texture: gl::Texture,
-
-    uniform_viewport: Option<gl::UniformLocation>,
-
-    vbo_switch: bool,
-    batches_prev: Option<Vec<Batch>>,
-
-    curr_color: Color,
-    curr_depth: f32,
-    commands: Vec<Command>,
 }
 
 #[derive(Debug)]
@@ -83,13 +84,9 @@ struct Batch {
 
 impl GLGraphics {
     pub fn new(options: &GameOptions) -> Self {
-        let vbo_a;
-        let vbo_b;
+        let vbo;
         let default_program;
-
         let blank_texture;
-
-        let uniform_viewport;
 
         let vertex_shader_source = r#"
             #version 330
@@ -124,8 +121,7 @@ impl GLGraphics {
             }
         "#;
 
-        vbo_a = gl::VBO::new();
-        vbo_b = gl::VBO::new();
+        vbo = gl::VBO::new();
         default_program = gl::Program::from_source(vertex_shader_source, fragment_shader_source)
             .unwrap_or_else(|s| panic!("{}", s));
 
@@ -145,7 +141,7 @@ impl GLGraphics {
         gl::enable_vertex_attrib_array(1);
         gl::enable_vertex_attrib_array(2);
 
-        uniform_viewport = default_program.get_uniform_location("uViewport");
+        let uniform_viewport = default_program.get_uniform_location("uViewport");
         gl::viewport(0, 0, options.size.0 as i32, options.size.1 as i32);
         gl::uniform_2(
             uniform_viewport,
@@ -156,98 +152,15 @@ impl GLGraphics {
         gl::enable(gl::Capability::Blend);
         gl::blend_func(gl::BlendFactor::SrcAlpha, gl::BlendFactor::OneMinusSrcAlpha);
 
-        let curr_color = Color::rgb(255, 255, 255);
-        let curr_depth = 0.0;
-        let commands = Vec::default();
         GLGraphics {
-            vbo_a,
-            vbo_b,
+            vbo,
             default_program,
-
             blank_texture,
-
-            uniform_viewport,
-
-            vbo_switch: false,
-            batches_prev: None,
-
-            curr_color,
-            curr_depth,
-            commands,
         }
     }
 
-    pub fn set_viewport(&mut self, x: i32, y: i32, width: i32, height: i32) {
-        gl::use_program(Some(self.default_program));
-        gl::viewport(x, y, width, height);
-        gl::uniform_2(self.uniform_viewport, width as f32, height as f32);
-    }
-}
-
-impl Graphics for GLGraphics {
-    fn fill_rect(&mut self, x: f32, y: f32, w: f32, h: f32) {
-        let verts = [
-            x,
-            y,
-            0.0,
-            0.0,
-            self.curr_color.r_normalized(),
-            self.curr_color.g_normalized(),
-            self.curr_color.b_normalized(),
-            self.curr_color.a_normalized(),
-            x,
-            y + h,
-            0.0,
-            0.0,
-            self.curr_color.r_normalized(),
-            self.curr_color.g_normalized(),
-            self.curr_color.b_normalized(),
-            self.curr_color.a_normalized(),
-            x + w,
-            y,
-            0.0,
-            0.0,
-            self.curr_color.r_normalized(),
-            self.curr_color.g_normalized(),
-            self.curr_color.b_normalized(),
-            self.curr_color.a_normalized(),
-            x,
-            y + h,
-            0.0,
-            0.0,
-            self.curr_color.r_normalized(),
-            self.curr_color.g_normalized(),
-            self.curr_color.b_normalized(),
-            self.curr_color.a_normalized(),
-            x + w,
-            y + h,
-            0.0,
-            0.0,
-            self.curr_color.r_normalized(),
-            self.curr_color.g_normalized(),
-            self.curr_color.b_normalized(),
-            self.curr_color.a_normalized(),
-            x + w,
-            y,
-            0.0,
-            0.0,
-            self.curr_color.r_normalized(),
-            self.curr_color.g_normalized(),
-            self.curr_color.b_normalized(),
-            self.curr_color.a_normalized(),
-        ]
-        .to_vec();
-        let depth = self.curr_depth;
-        self.commands.push(Command {
-            verts,
-            depth,
-            texture: None,
-        });
-    }
-
-    fn draw_subimage_scaled_normalized(
-        &mut self,
-        texture: Texture,
+    fn push_rect(
+        output: &mut Vec<f32>,
         x: f32,
         y: f32,
         w: f32,
@@ -256,110 +169,100 @@ impl Graphics for GLGraphics {
         sy: f32,
         sw: f32,
         sh: f32,
+        color: Color,
     ) {
+        let rgba = [
+            color.r_normalized(),
+            color.g_normalized(),
+            color.b_normalized(),
+            color.a_normalized(),
+        ];
         let verts = [
-            x,
-            y,
-            sx,
-            sy,
-            self.curr_color.r_normalized(),
-            self.curr_color.g_normalized(),
-            self.curr_color.b_normalized(),
-            self.curr_color.a_normalized(),
-            x,
-            y + h,
-            sx,
-            sy + sh,
-            self.curr_color.r_normalized(),
-            self.curr_color.g_normalized(),
-            self.curr_color.b_normalized(),
-            self.curr_color.a_normalized(),
-            x + w,
-            y,
-            sx + sw,
-            sy,
-            self.curr_color.r_normalized(),
-            self.curr_color.g_normalized(),
-            self.curr_color.b_normalized(),
-            self.curr_color.a_normalized(),
-            x,
-            y + h,
-            sx,
-            sy + sh,
-            self.curr_color.r_normalized(),
-            self.curr_color.g_normalized(),
-            self.curr_color.b_normalized(),
-            self.curr_color.a_normalized(),
-            x + w,
-            y + h,
-            sx + sw,
-            sy + sh,
-            self.curr_color.r_normalized(),
-            self.curr_color.g_normalized(),
-            self.curr_color.b_normalized(),
-            self.curr_color.a_normalized(),
-            x + w,
-            y,
-            sx + sw,
-            sy,
-            self.curr_color.r_normalized(),
-            self.curr_color.g_normalized(),
-            self.curr_color.b_normalized(),
-            self.curr_color.a_normalized(),
-        ]
-        .to_vec();
-        let depth = self.curr_depth;
-        self.commands.push(Command {
-            verts,
-            depth,
-            texture: Some(texture),
-        });
+            [x, y, sx, sy],
+            [x, y + h, sx, sy + sh],
+            [x + w, y, sx + sw, sy],
+            [x, y + h, sx, sy + sh],
+            [x + w, y + h, sx + sw, sy + sh],
+            [x + w, y, sx + sw, sy],
+        ];
+        for vert in &verts {
+            output.extend_from_slice(vert);
+            output.extend_from_slice(&rgba);
+        }
     }
 
-    fn flush(&mut self, _: &mut Context, clear_color: Option<Color>) {
+    #[rustfmt::skip]
+    pub fn flush(
+        &mut self,
+        ctx: &mut Context,
+        commands: &mut Vec<GraphicsCommand>,
+        clear_color: Option<Color>,
+    ) {
         let mut verts: Vec<f32> = Vec::default();
         let mut batches: Vec<Batch> = Vec::default();
 
         let mut last_batch;
-        self.commands
-            .sort_by(|a, b| a.depth.partial_cmp(&b.depth).unwrap());
+        commands.sort_by(|a, b| a.depth().partial_cmp(&b.depth()).unwrap());
 
-        let mut texture = self.commands.first().and_then(|x| x.texture);
+        let mut texture = commands.first().and_then(|x| x.texture());
         batches.push(Batch {
             vert_count: 0,
             texture,
         });
-        for cmd in self.commands.iter() {
+
+        for cmd in commands.iter() {
             last_batch = batches.last_mut().unwrap();
-            if cmd.texture != texture {
-                texture = cmd.texture;
+            if cmd.texture() != texture {
+                texture = cmd.texture();
                 let new_batch = Batch {
                     vert_count: 0,
                     texture,
                 };
                 batches.push(new_batch);
                 last_batch = batches.last_mut().unwrap();
-            };
-            for vert in &cmd.verts {
-                verts.push(*vert);
-                last_batch.vert_count += 1;
+            }
+
+            match *cmd {
+                GraphicsCommand::FillRect { color, x, y, w, h, .. } => {
+                    Self::push_rect(&mut verts, x, y, w, h, 0.0, 0.0, 0.0, 0.0, color);
+                    last_batch.vert_count += 48;
+                },
+                GraphicsCommand::DrawImage { color, texture, x, y, .. } => {
+                    let (tw, th) = texture.dimensions(ctx);
+                    let tw = tw as f32;
+                    let th = th as f32;
+                    Self::push_rect(&mut verts, x, y, tw, th, 0.0, 0.0, 1.0, 1.0, color);
+                    last_batch.vert_count += 48;
+                },
+                GraphicsCommand::DrawSubimage { color, texture, x, y, sx, sy, sw, sh, .. } => {
+                    let (tw, th) = texture.dimensions(ctx);
+                    let tw = tw as f32;
+                    let th = th as f32;
+                    Self::push_rect(&mut verts, x, y, sw, sh, sx / tw, sy / th, sw / tw, sh / th, color);
+                    last_batch.vert_count += 48;
+                },
+                GraphicsCommand::DrawImageScaled { color, x, y, w, h, .. } => {
+                    Self::push_rect(&mut verts, x, y, w, h, 0.0, 0.0, 1.0, 1.0, color);
+                    last_batch.vert_count += 48;
+                },
+                GraphicsCommand::DrawSubimageScaled { color, texture, x, y, w, h, sx, sy, sw, sh, .. } => {
+                    let (tw, th) = texture.dimensions(ctx);
+                    let tw = tw as f32;
+                    let th = th as f32;
+                    Self::push_rect(&mut verts, x, y, w, h, sx / tw, sy / th, sw / tw, sh / th, color);
+                    last_batch.vert_count += 48;
+                },
             }
         }
 
-        self.commands.clear();
+        commands.clear();
         if verts.len() == 0 {
             return;
         }
 
-        let (vbo_write, vbo_render) = match self.vbo_switch {
-            true => (self.vbo_a, self.vbo_b),
-            false => (self.vbo_b, self.vbo_a),
-        };
-        self.vbo_switch = !self.vbo_switch;
-
         gl::use_program(Some(self.default_program));
 
-        gl::bind_buffer(gl::BufferKind::Array, Some(vbo_write));
+        gl::bind_buffer(gl::BufferKind::Array, Some(self.vbo));
         gl::buffer_data(gl::BufferKind::Array, &verts, gl::UsageMode::Stream);
         gl::vertex_attrib_pointer::<f32>(0, 2, false, 8, 0);
         gl::vertex_attrib_pointer::<f32>(1, 2, false, 8, 2);
@@ -375,22 +278,17 @@ impl Graphics for GLGraphics {
             gl::clear(gl::BufferBit::Color);
         }
 
-        if let Some(batches_prev) = &self.batches_prev {
-            gl::bind_buffer(gl::BufferKind::Array, Some(vbo_render));
-            let mut index = 0;
-            for batch in batches_prev {
-                gl::bind_texture(
-                    gl::TextureKind::Texture2D,
-                    batch
-                        .texture
-                        .and_then(|x| Some(x.id.into()))
-                        .or(Some(self.blank_texture)),
-                );
-                gl::draw_arrays(gl::DrawMode::Triangles, index, index + batch.vert_count);
-                index += batch.vert_count;
-            }
+        let mut index = 0;
+        for batch in batches {
+            gl::bind_texture(
+                gl::TextureKind::Texture2D,
+                batch
+                    .texture
+                    .and_then(|x| Some(ctx.graphics_context.as_gl().unwrap().get_texture(x.0)))
+                    .or(Some(self.blank_texture)),
+            );
+            gl::draw_arrays(gl::DrawMode::Triangles, index, index + batch.vert_count);
+            index += batch.vert_count;
         }
-
-        self.batches_prev = Some(batches);
     }
 }
