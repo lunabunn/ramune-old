@@ -1,21 +1,15 @@
 use super::gl;
-use crate::graphics::{Color, GraphicsCommand, GraphicsContext, Texture};
+use crate::graphics::{Color, GraphicsCommand, Texture};
 use crate::{Context, GameOptions};
 
 #[derive(Default)]
-pub struct GLGraphicsContext {
+pub struct GraphicsContext {
     textures: Vec<gl::Texture>,
     dimensions: Vec<(u32, u32)>,
 }
 
-impl GLGraphicsContext {
-    pub fn get_texture(&self, index: usize) -> gl::Texture {
-        self.textures[index]
-    }
-}
-
-impl GraphicsContext for GLGraphicsContext {
-    fn create_texture(&mut self, width: u32, height: u32, pixels: &[Color]) -> Texture {
+impl GraphicsContext {
+    pub fn create_texture(&mut self, width: u32, height: u32, pixels: &[Color]) -> Texture {
         let tex = gl::Texture::new();
         gl::bind_texture(gl::TextureKind::Texture2D, Some(tex));
         let mut data = Vec::new();
@@ -59,12 +53,16 @@ impl GraphicsContext for GLGraphicsContext {
         Texture(self.textures.len() - 1)
     }
 
-    fn texture_dimensions(&self, tex: Texture) -> (u32, u32) {
+    pub fn texture_dimensions(&self, tex: Texture) -> (u32, u32) {
         self.dimensions[tex.0]
+    }
+
+    pub fn get_texture(&self, index: usize) -> gl::Texture {
+        self.textures[index]
     }
 }
 
-pub(crate) struct GLGraphics {
+pub struct Renderer {
     vbo: gl::VBO,
     default_program: gl::Program,
     blank_texture: gl::Texture,
@@ -82,7 +80,7 @@ struct Batch {
     texture: Option<Texture>,
 }
 
-impl GLGraphics {
+impl Renderer {
     pub fn new(options: &GameOptions) -> Self {
         let vbo;
         let default_program;
@@ -152,7 +150,7 @@ impl GLGraphics {
         gl::enable(gl::Capability::Blend);
         gl::blend_func(gl::BlendFactor::SrcAlpha, gl::BlendFactor::OneMinusSrcAlpha);
 
-        GLGraphics {
+        Renderer {
             vbo,
             default_program,
             blank_texture,
@@ -192,7 +190,7 @@ impl GLGraphics {
     }
 
     #[rustfmt::skip]
-    pub fn flush(
+    pub(crate) fn flush(
         &mut self,
         ctx: &mut Context,
         commands: &mut Vec<GraphicsCommand>,
@@ -284,7 +282,7 @@ impl GLGraphics {
                 gl::TextureKind::Texture2D,
                 batch
                     .texture
-                    .and_then(|x| Some(ctx.graphics_context.as_gl().unwrap().get_texture(x.0)))
+                    .and_then(|x| Some(ctx.graphics_context.get_texture(x.0)))
                     .or(Some(self.blank_texture)),
             );
             gl::draw_arrays(gl::DrawMode::Triangles, index, index + batch.vert_count);

@@ -1,38 +1,5 @@
-use super::backend_opengl::{GLGraphics, GLGraphicsContext};
-use super::Texture;
+use super::{Texture, Renderer};
 use crate::Context;
-
-pub(crate) trait GraphicsContext {
-    fn create_texture(&mut self, width: u32, height: u32, pixels: &[Color]) -> Texture;
-    fn texture_dimensions(&self, tex: Texture) -> (u32, u32);
-}
-
-pub(crate) enum GraphicsContextHandle {
-    GL(GLGraphicsContext),
-}
-
-impl GraphicsContextHandle {
-    pub fn as_gl(&self) -> Option<&GLGraphicsContext> {
-        if let Self::GL(ctx) = self {
-            Some(ctx)
-        } else {
-            None
-        }
-    }
-}
-
-impl GraphicsContext for GraphicsContextHandle {
-    fn create_texture(&mut self, width: u32, height: u32, pixels: &[Color]) -> Texture {
-        match self {
-            Self::GL(tm) => tm.create_texture(width, height, pixels),
-        }
-    }
-    fn texture_dimensions(&self, tex: Texture) -> (u32, u32) {
-        match self {
-            Self::GL(tm) => tm.texture_dimensions(tex),
-        }
-    }
-}
 
 #[rustfmt::skip]
 pub(crate) enum GraphicsCommand {
@@ -66,21 +33,17 @@ impl GraphicsCommand {
 }
 
 pub struct Graphics {
-    backend: GraphicsBackend,
+    renderer: Renderer,
     commands: Vec<GraphicsCommand>,
     pub color: Color,
     pub depth: f32,
 }
 
-pub(crate) enum GraphicsBackend {
-    GL(GLGraphics),
-}
-
 #[rustfmt::skip]
 impl Graphics {
-    pub(crate) fn from_backend(backend: GraphicsBackend) -> Self {
+    pub(crate) fn from_backend(renderer: Renderer) -> Self {
         Self {
-            backend,
+            renderer,
             commands: Vec::new(),
             color: Color::white(),
             depth: 0.0,
@@ -108,11 +71,7 @@ impl Graphics {
     }
 
     pub fn flush(&mut self, ctx: &mut Context, clear_color: Option<Color>) {
-        match &mut self.backend {
-            GraphicsBackend::GL(g) => {
-                g.flush(ctx, &mut self.commands, clear_color);
-            }
-        }
+        self.renderer.flush(ctx, &mut self.commands, clear_color);
     }
 }
 

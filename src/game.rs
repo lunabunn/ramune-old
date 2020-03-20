@@ -26,7 +26,7 @@ use crate::Context;
 /// }
 /// ```
 pub fn run(options: GameOptions, callback: impl FnMut(Event) + 'static) {
-    graphics::backend_opengl::run(options, callback);
+    graphics::run(options, callback);
 }
 
 /// Options for initializing the game.

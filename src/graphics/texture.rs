@@ -1,4 +1,4 @@
-use super::{Color, GraphicsContext};
+use super::Color;
 use crate::Context;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]

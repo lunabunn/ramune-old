@@ -12,6 +12,9 @@ pub mod graphics {
     mod texture;
     pub use texture::*;
 
+    pub(crate) use backend_opengl as backend;
+    pub use backend::{GraphicsContext, Renderer, run};
+
     pub(crate) mod backend_opengl {
         mod game;
         pub use game::*;
